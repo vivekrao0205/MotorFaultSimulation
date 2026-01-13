@@ -27,11 +27,12 @@ always @(posedge clk) begin
         idx <= idx + 1;
 
         case (mode)
-            2'b00: signal <= sine_lut[idx];           // Healthy
-            2'b01: signal <= sine_lut[idx] + 200;     // Bearing
-            2'b10: signal <= sine_lut[idx] + (idx*20);// Rotor
-            2'b11: signal <= sine_lut[idx] - 300;     // Stator
+            2'b00: signal <= sine_lut[idx];           
+            2'b01: signal <= sine_lut[idx] + 200;      
+            2'b10: signal <= sine_lut[idx] + (idx*20);
+            2'b11: signal <= sine_lut[idx] - 300;     
         endcase
     end
 end
 endmodule
+
