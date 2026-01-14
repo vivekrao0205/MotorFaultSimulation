@@ -82,14 +82,6 @@ This raw output captures low-level signal transitions and serves as the input fo
 
 ---
 
-## Waveform Visualization (GTKWave)
-
-The waveform visualization illustrates the simulated industrial motor signals under various operating and fault conditions, generated using **Verilog HDL** and displayed through **GTKWave**.
-
-Distinct variations in signal patterns can be observed for each fault scenario, including bearing faults, rotor faults, and motor aging. These waveform differences provide clear insight into how faults affect motor behavior at the hardware level.
-
----
-
 ## Python-Based Signal Analysis
 
 Post-simulation analysis is carried out using **Python (Jupyter Notebooks)** to extract meaningful information from the generated motor signals. The analysis includes:
