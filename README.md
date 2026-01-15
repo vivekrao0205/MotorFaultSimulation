@@ -27,8 +27,9 @@ This focuses on simulating **industrial motor behavior under different operating
 ## Conditions Simulated
 - ✅ Healthy Motor  
 - ⚠️ Bearing Fault  
-- ⚠️ Rotor Fault  
-- ⚠️ Motor Aging / Degradation  
+- ⚠️ Rotor Fault
+- ⚠️ Stator Fault
+- 📊 Motor Aging 
 
 ---
 
@@ -90,7 +91,8 @@ Post-simulation analysis is carried out using **Python (Jupyter Notebooks)** to 
 - Statistical feature extraction, including:
   - Mean  
   - Variance  
-  - Skewness  
+  - Peak
+  - Band_high  
 - Trend analysis to study the impact of faults on motor performance  
 
 This combined approach enables effective correlation between **hardware-level simulation results** and **software-based fault diagnostic techniques**.
