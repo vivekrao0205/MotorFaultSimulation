@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-fs = 100
+fs = 5000
 t = np.linspace(0, 1, fs)
 
 healthy = np.sin(2 * np.pi * 50 * t)
