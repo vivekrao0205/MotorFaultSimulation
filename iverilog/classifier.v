@@ -1,16 +1,24 @@
-module classifier (
-    input [31:0] rms,
-    output reg [1:0] fault
+module classifier(
+    input [15:0] avg_current,
+    input [15:0] avg_vibration,
+    input [15:0] avg_temperature,
+    input [15:0] rotor_flux,
+    input [15:0] stator_flux,
+    input [15:0] voltage,
+    output reg [2:0] fault_type
 );
 
 always @(*) begin
-    if (rms < 100000)
-        fault = 2'b00; // Healthy
-    else if (rms < 200000)
-        fault = 2'b01; // Bearing
-    else if (rms < 300000)
-        fault = 2'b10; // Rotor
+    if (voltage < 180)
+        fault_type = 3'b100;
+    else if (avg_vibration > 80)
+        fault_type = 3'b011;
+    else if (stator_flux < 60 && avg_temperature > 80)
+        fault_type = 3'b010;
+    else if (rotor_flux < 60 && avg_current > 80)
+        fault_type = 3'b001;
     else
-        fault = 2'b11; // Stator
+        fault_type = 3'b000;
 end
+
 endmodule
