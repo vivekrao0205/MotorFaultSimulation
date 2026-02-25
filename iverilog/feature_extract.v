@@ -1,27 +1,47 @@
-module feature_extract (
+module feature_extract(
     input clk,
-    input rst,
-    input signed [15:0] signal,
-    output reg [31:0] rms
+    input [15:0] motor_current,
+    input [15:0] vibration,
+    input [15:0] temperature,
+    output reg [15:0] avg_current,
+    output reg [15:0] avg_vibration,
+    output reg [15:0] avg_temperature
 );
 
-reg [31:0] sum_sq;
-reg [9:0] count;
+reg [31:0] sum_current = 0;
+reg [31:0] sum_vibration = 0;
+reg [31:0] sum_temperature = 0;
+reg [7:0] count = 0;
 
 always @(posedge clk) begin
-    if (rst) begin
-        sum_sq <= 0;
-        count <= 0;
-        rms <= 0;
-    end else begin
-        sum_sq <= sum_sq + (signal * signal);
-        count <= count + 1;
+    sum_current    <= sum_current + motor_current;
+    sum_vibration  <= sum_vibration + vibration;
+    sum_temperature<= sum_temperature + temperature;
 
-        if (count == 1023) begin
-            rms <= sum_sq >> 10; // approx RMS
-            sum_sq <= 0;
-            count <= 0;
-        end
+    count <= count + 1;
+
+    if(count == 2) begin
+        avg_current     <= sum_current / 10;
+        avg_vibration   <= sum_vibration / 10;
+        avg_temperature <= sum_temperature / 10;
+
+        sum_current = 0;
+        sum_vibration = 0;
+        sum_temperature = 0;
+        count = 0;
     end
 end
+
 endmodule
+
+// cd iverilog
+// iverilog -o motor_sim *.v
+// vvp motor_sim
+// gtkwave motor.vcd
+
+// iverilog -o motor_sim *.v; vvp motor_sim; gtkwave motor.vcd
+
+// iverilog -o motor_sim *.v
+// vvp motor_sim
+// dir motor.vcd
+// gtkwave motor.vcd
