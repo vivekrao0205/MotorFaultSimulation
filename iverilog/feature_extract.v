@@ -34,6 +34,9 @@ end
 
 endmodule
 
+
+// comands for gtk and raw o/p
+
 // cd iverilog
 // iverilog -o motor_sim *.v
 // vvp motor_sim
