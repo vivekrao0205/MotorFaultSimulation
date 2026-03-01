@@ -1,38 +1,69 @@
-module motor_signal (
+`timescale 1s/1ms
+
+module motor_signal(
     input clk,
-    input rst,
-    input [1:0] mode,
-    output reg signed [15:0] signal
+    output reg [15:0] motor_current,
+    output reg [15:0] vibration,
+    output reg [15:0] temperature,
+    output reg [15:0] rotor_flux,
+    output reg [15:0] stator_flux,
+    output reg [15:0] voltage
 );
 
-reg signed [15:0] sine_lut [0:15];
-reg [3:0] idx;
-
-initial begin
-    sine_lut[0]=0;   sine_lut[1]=383;
-    sine_lut[2]=707; sine_lut[3]=923;
-    sine_lut[4]=1000;sine_lut[5]=923;
-    sine_lut[6]=707; sine_lut[7]=383;
-    sine_lut[8]=0;   sine_lut[9]=-383;
-    sine_lut[10]=-707; sine_lut[11]=-923;
-    sine_lut[12]=-1000;sine_lut[13]=-923;
-    sine_lut[14]=-707; sine_lut[15]=-383;
-end
+integer time_sec = 0;
 
 always @(posedge clk) begin
-    if (rst) begin
-        idx <= 0;
-        signal <= 0;
-    end else begin
-        idx <= idx + 1;
+    time_sec = time_sec + 1;
 
-        case (mode)
-            2'b00: signal <= sine_lut[idx];           
-            2'b01: signal <= sine_lut[idx] + 200;      
-            2'b10: signal <= sine_lut[idx] + (idx*20);
-            2'b11: signal <= sine_lut[idx] - 300;     
-        endcase
+    //  Healthy
+    if(time_sec <= 2) begin
+        motor_current <= 50;
+        vibration <= 20;
+        temperature <= 40;
+        rotor_flux <= 100;
+        stator_flux <= 100;
+        voltage <= 230;
+    end
+
+    //  Rotor Fault
+    else if(time_sec <= 4) begin
+        motor_current <= 90;
+        vibration <= 50;
+        temperature <= 65;
+        rotor_flux <= 50;
+        stator_flux <= 100;
+        voltage <= 230;
+    end
+
+    // Stator Fault
+    else if(time_sec <= 6) begin
+        motor_current <= 95;
+        vibration <= 45;
+        temperature <= 90;
+        rotor_flux <= 100;
+        stator_flux <= 40;
+        voltage <= 230;
+    end
+
+    // Bearing Fault
+    else if(time_sec <= 8) begin
+        motor_current <= 70;
+        vibration <= 85;
+        temperature <= 50;
+        rotor_flux <= 100;
+        stator_flux <= 100;
+        voltage <= 230;
+    end
+
+    // Voltage Unbalance
+    else begin
+        motor_current <= 60;
+        vibration <= 30;
+        temperature <= 50;
+        rotor_flux <= 100;
+        stator_flux <= 100;
+        voltage <= 160;
     end
 end
-endmodule
 
+endmodule
