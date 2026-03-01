@@ -297,7 +297,8 @@ T_5 ;
     %vpi_call 2 36 "$finish" {0 0 0};
     %end;
     .thread T_5;
-# The file index is used to find the file name in the following table.
+# The file index is used to find the file name in the table.
+
 :file_names 6;
     "N/A";
     "<interactive>";
@@ -305,3 +306,4 @@ T_5 ;
     "motor_signal.v";
     "feature_extract.v";
     "classifier.v";
+
