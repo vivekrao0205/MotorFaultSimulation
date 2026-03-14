@@ -21,7 +21,7 @@ wire [15:0] avg_temperature;
 // Fault output
 wire [2:0] fault_type;
 
-// Storage arrays for summary
+// Storage arrays
 reg [15:0] curr_store [1:10];
 reg [15:0] vib_store  [1:10];
 reg [15:0] temp_store [1:10];
@@ -30,9 +30,8 @@ reg [15:0] sf_store   [1:10];
 reg [15:0] volt_store [1:10];
 reg [2:0]  fault_store[1:10];
 
-//////////////////////////////////////////////////////////
-// Module Instantiation
-//////////////////////////////////////////////////////////
+
+// MODULE INSTANTIATION
 
 motor_signal MS(
     .clk(clk),
@@ -55,60 +54,60 @@ feature_extract FE(
 );
 
 classifier CL(
-    .avg_current(avg_current),
-    .avg_vibration(avg_vibration),
-    .avg_temperature(avg_temperature),
+    .motor_current(motor_current),
+    .vibration(vibration),
+    .temperature(temperature),
     .rotor_flux(rotor_flux),
     .stator_flux(stator_flux),
     .voltage(voltage),
     .fault_type(fault_type)
 );
 
-//////////////////////////////////////////////////////////
-// Clock Generation
-//////////////////////////////////////////////////////////
+
+// CLOCK GENERATION
 
 always #0.5 clk = ~clk;
 
-//////////////////////////////////////////////////////////
-// LIVE ADVANCED OUTPUT + STORE DATA
-//////////////////////////////////////////////////////////
+
+// LIVE OUTPUT
 
 always @(posedge clk) begin
-    i = i + 1;
 
-    // Store values
-    curr_store[i]  = motor_current;
-    vib_store[i]   = vibration;
-    temp_store[i]  = temperature;
-    rf_store[i]    = rotor_flux;
-    sf_store[i]    = stator_flux;
-    volt_store[i]  = voltage;
-    fault_store[i] = fault_type;
+    if(i < 10) begin
+        i <= i + 1;
 
-    // Live detailed output
-    $display("--------------------------------------------------");
-    $display("Time = %0d sec", i);
-    $display("Current=%0d  Vibration=%0d  Temp=%0d", 
-              motor_current, vibration, temperature);
-    $display("RotorFlux=%0d  StatorFlux=%0d  Voltage=%0d",
-              rotor_flux, stator_flux, voltage);
+        curr_store[i]  <= motor_current;
+        vib_store[i]   <= vibration;
+        temp_store[i]  <= temperature;
+        rf_store[i]    <= rotor_flux;
+        sf_store[i]    <= stator_flux;
+        volt_store[i]  <= voltage;
+        fault_store[i] <= fault_type;
 
-    case(fault_type)
-        3'b000: $display("STATUS: HEALTHY MOTOR");
-        3'b001: $display("STATUS: ROTOR FAULT DETECTED");
-        3'b010: $display("STATUS: STATOR FAULT DETECTED");
-        3'b011: $display("STATUS: BEARING FAULT DETECTED");
-        3'b100: $display("STATUS: VOLTAGE IMBALANCE DETECTED");
-        default: $display("STATUS: UNKNOWN");
-    endcase
+        $display("--------------------------------------------------");
+        $display("Time = %0d sec", i);
+        $display("Current=%0d  Vibration=%0d  Temp=%0d",
+                  motor_current, vibration, temperature);
+        $display("RotorFlux=%0d  StatorFlux=%0d  Voltage=%0d",
+                  rotor_flux, stator_flux, voltage);
+
+        case(fault_type)
+            3'b000: $display("STATUS: HEALTHY MOTOR");
+            3'b001: $display("STATUS: ROTOR FAULT DETECTED");
+            3'b010: $display("STATUS: STATOR FAULT DETECTED");
+            3'b011: $display("STATUS: BEARING FAULT DETECTED");
+            3'b100: $display("STATUS: VOLTAGE IMBALANCE DETECTED");
+            default: $display("STATUS: UNKNOWN");
+        endcase
+    end
+
 end
 
-//////////////////////////////////////////////////////////
-// FINAL SUMMARY AT END
-//////////////////////////////////////////////////////////
+
+// FINAL SUMMARY
 
 initial begin
+
     $dumpfile("motor.vcd");
     $dumpvars(0, tb_motor_fault);
 
@@ -131,6 +130,7 @@ initial begin
     $display("======================================\n");
 
     $finish;
+
 end
 
 endmodule
