@@ -170,17 +170,23 @@ Industrial-Motor-Fault-Simulation/
 
 ---
 
-## How to Run
+## How to Run  
 
-1. Compile:
-   iverilog motor_signal.v feature_extract.v classifier.v tb_motor_fault.v
+1. Compile  
+```
+iverilog motor_signal.v feature_extract.v classifier.v tb_motor_fault.v
+```
 
-2. Run simulation:
-   vvp a.out
+2. Run  
+```
+vvp a.out
+```
 
-3. Open waveform:
-   gtkwave motor.vcd
-   
+3. View waveform  
+```
+gtkwave motor.vcd
+```
+
 ---
 
 # Technologies Used  
